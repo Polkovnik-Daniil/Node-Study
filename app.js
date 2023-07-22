@@ -1,35 +1,15 @@
-const fs = require("fs");
- 
-// асинхронное чтение
-fs.readFile("hello.txt", "utf8", 
-            function(error,data){
-                console.log("Асинхронное чтение файла");
-                if(error) throw error; // если возникла ошибка
-                console.log(data);  // выводим считанные данные
+const Emitter = require("events");
+let emitter = new Emitter();
+let eventName = "greet"; //Объект без ивента
+
+//вешаем ивент на объект, но не вызываем
+emitter.on(eventName, function(){
+    console.log("Привет!");
 });
- 
-// синхронное чтение
-console.log("Синхронное чтение файла")
-let fileContent = fs.readFileSync("hello.txt", "utf8");
-console.log(fileContent);
-
-
-fs.appendFileSync("hello.txt", "Привет ми ми ми!");
-fs.appendFile("hello.txt", "Привет МИД!", function(error){
-    if(error) throw error; // если возникла ошибка
-                 
-    console.log("Запись файла завершена. Содержимое файла:");
-    let data = fs.readFileSync("hello.txt", "utf8");
-    console.log(data);  // выводим считанные данные
+//вешаем ивент на объект, но не вызываем
+emitter.on(eventName, function(){
+    console.log("Hello all!");
 });
 
-
  
-fs.appendFileSync("hello.txt", "Привет ми ми ми!"); 
-fs.appendFile("hello.txt", "Привет МИД!", function(error){
-    if(error) throw error; // если возникла ошибка
-                 
-    console.log("Запись файла завершена. Содержимое файла:");
-    let data = fs.readFileSync("hello.txt", "utf8");
-    console.log(data);  // выводим считанные данные
-});
+emitter.emit(eventName);
