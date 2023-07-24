@@ -1,17 +1,10 @@
-const EventEmitter = require("events");
+const fs = require("fs");
+const zlib = require("zlib");
   
-let eventName = "greet";
- 
-class User extends EventEmitter {
-    sayHi(data) {
-        this.emit(eventName, data);
-    }
-}
- 
-let user = new User();
-// добавляем к объекту user обработку события "greet"
-user.on(eventName, function(data){
-    console.log(data);
-});
+let readableStream = fs.createReadStream("hello.txt", "utf8");
   
-user.sayHi("Мне нужна твоя одежда...");
+let writeableStream = fs.createWriteStream("hello.txt.gz");
+  
+let gzip = zlib.createGzip();
+  
+readableStream.pipe(gzip).pipe(writeableStream);
