@@ -1,13 +1,16 @@
-const http = require("http");
-const fs = require("fs");
+const express = require("express");
  
-http.createServer(function(request, response){
+const app = express();
+app.get("/", function(request, response){
      
-    fs.readFile("index.html", "utf8", function(error, data){
-                 
-        let message = "Изучаем Node.js"; 
-        let header = "Главная страница";
-        data = data.replace("{header}", header).replace("{message}", message);
-        response.end(data);
-    })
-}).listen(3000);
+    response.send("<h1>Главная страница</h1>");
+});
+app.get("/about", function(request, response){
+     
+    response.send("<h1>О сайте</h1>");
+});
+app.get("/contact", function(request, response){
+     
+    response.send("<h1>Контакты</h1>");
+});
+app.listen(3000);
