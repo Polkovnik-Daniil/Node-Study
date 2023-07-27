@@ -1,26 +1,20 @@
-var http = require("http");
+const http = require("http");
+const fs = require("fs");
  
-http.createServer(function(request, response){
-    response.setHeader("Content-Type", "text/html; charset=utf-8;");
-     
-    if(request.url === "/"){
-        response.statusCode = 302; // временная переадресация
-        // на адрес localhost:3000/newpage
-        response.setHeader("Location", "/newpage");
-    }
-    else if(request.url == "/newpage"){
-        response.write("New address");
+http.createServer(async (request, response) => {  
+    if (request.url === "/user") {
+         
+        const buffers = []; // буфер для получаемых данных
+ 
+        for await (const chunk of request) {
+            buffers.push(chunk);        // добавляем в буфер все полученные данные
+        }
+ 
+        const user = JSON.parse(Buffer.concat(buffers).toString());
+        console.log(user.name,"-", user.age);
+        response.end("Данные успешно получены");
     }
     else{
-        response.statusCode = 404; // адрес не найден
-        response.write("Not Found");
+        fs.readFile("index.html", (error, data) => response.end(data));
     }
-
-    console.log("Url: " + request.url);
-    console.log("Тип запроса: " + request.method);
-    console.log("User-Agent: " + request.headers["user-agent"]);
-    console.log("Все заголовки");
-    console.log(request.headers);
-     
-    response.end();
-}).listen(3000);
+}).listen(3000, ()=>console.log("Сервер запущен по адресу http://localhost:3000"));
