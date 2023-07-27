@@ -1,8 +1,8 @@
 const express = require("express");
 const app = express();
  
-app.use(function (request, response) {
-  response.sendFile(__dirname + "/index.html");
+app.use("/home/foo/bar", function (request, response) {
+  response.sendStatus(404);
   console.log("SUCCESS_SENT_FILE");
 });
  
