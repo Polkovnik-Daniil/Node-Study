@@ -1,42 +1,39 @@
 const express = require("express");
 const app = express();
+//302 можно использовать вместо 301
+app.use("/",function(request, response){
+    response.redirect(301, "/about");
+});
+app.use("/index", function (request, response) {
+  response.redirect("https://www.youtube.com/");
+});
+app.use("/home/bar", function (request, response) {
+  response.redirect("about");
+});
+app.use("/home/about", function (request, response) {
+  response.send("<h1>About OTHER</h1>");
+});
+app.use("/home", function (request, response) {
+  response.redirect("about");
+});
+app.use("/about", function (request, response) {
+  response.send("<h1>About MAIN</h1>");
+});
+//Переадресация относительно текущего адреса на адрес на том же уровне:
+app.use("/home/f/bar", function (request, response) {
+  response.redirect("./about");
+});
+//Здесь идет переадресация с http://localhost:3000/home/f/bar на http://localhost:3000/home/f/about
+app.use("/home/fo/bar", function (request, response) {
+  response.redirect("../about");
+});
 
-//Такой маршрут будет соответствовать строке запроса "/bk" или "/bok".
-app.get("/bo?k", function (request, response) {
-    response.send(request.url)
+//Здесь идет переадресация с http://localhost:3000/home/foo/bar на http://localhost:3000/home/foo
+app.use("/home/foo/bar", function (request, response) {
+  response.redirect(".");
 });
-//Такой маршрут будет соответствовать запросам "/bok", "/book", "/boook" и так далее.
-app.get("/bo+k", function (request, response) {
-    response.send(request.url)
-});
-//Такой маршрут будет соответствовать запросам "/bork", "/bonk", "/bor.dak", "/bor/ok" и так далее.
-app.get("/bo*k", function (request, response) {
-    response.send(request.url)
-});
-//Выражение (.html)? указывает, что подстрока ".html" может встречаться или отсутствовать в строке запроса. И такой маршрут будет соответствовать запросам "/book" и "/book.html".
-app.get("/book(.html)?", function (request, response) {
-    response.send(request.url)
-});
-//необходимо перехватить запрос ко всем файлам html или всем путям, которые в конце имеют ".html"(Это регулярное выражение).
-app.get(/.*(\.)html$/, function (request, response) {
-    response.send(request.url)
-});
-
-// обработка запроса по адресу /about
-app.get("/about", function(request, response){
-     
-    response.send("<h1>О сайте</h1>");
-});
- 
-// обработка запроса по адресу /contact
-app.use("/contact", function(request, response){
-     
-    response.send("<h1>Контакты</h1>");
-});
- 
-// обработка запроса к корню веб-сайта
-app.get("/", function(request, response){
-     
-    response.send("<h1>Главная страница</h1>");
+//Здесь идет переадресация с http://localhost:3000/home/foo/bar на http://localhost:3000/home
+app.use("/home/fooo/bar", function (request, response) {
+  response.redirect("..");
 });
 app.listen(3000);
