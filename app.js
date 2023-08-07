@@ -1,17 +1,20 @@
 const express = require("express");
-
 const app = express();
-
-// создаем парсер для данных application/x-www-form-urlencoded
-const urlencodedParser = express.urlencoded({ extended: false });
-
-app.get("/", function (request, response) {
-  response.sendFile(__dirname + "/index.html");
-});
-app.post("/", urlencodedParser, function (request, response) {
-  if (!request.body) return response.sendStatus(400);
-  console.log(request.body);
-  response.send(`${request.body.userName} - ${request.body.userAge}`);
+ 
+app.get("/products/:productId", function (request, response) {
+  response.send("productId: " + request.params["productId"])
 });
 
-app.listen(3000, () => console.log("Сервер запущен..."));
+app.get("/categories/:categoryId/products/:productId", function (request, response) {
+    let catId = request.params["categoryId"];
+    let prodId = request.params["productId"];
+    response.send(`Категория: ${catId}  Товар: ${prodId}`);
+});
+
+app.get("/book/:pageName.:pageExt", function (request, response) {
+    let pageName = request.params["pageName"];
+    let pageExt = request.params["pageExt"];
+    response.send(`Запрошенный файл: ${pageName}.${pageExt}`);
+});
+
+app.listen(3000);
