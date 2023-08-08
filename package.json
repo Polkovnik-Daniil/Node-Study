@@ -2,10 +2,11 @@
   "name": "expressapp",
   "version": "1.0.0",
   "dependencies": {
-    "express": "^4.17.0"
+    "express": "^4.17.0",
+    "hbs": "^4.2.0"
   },
-  "scripts" : {
-    "start" : "node app.js",
-    "dev" : "node app.js Tom 26"
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node app.js Tom 26"
   }
 }

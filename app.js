@@ -1,17 +1,15 @@
 const express = require("express");
 
 const app = express();
-// создаем парсер для данных в формате json
-const jsonParser = express.json();
+//Чтобы установить Handlebars в качестве движка представлений в Express, вызывается функция ниже:
+app.set("view engine", "hbs");
 
-app.post("/user", jsonParser, function (request, response) {
-  console.log(request.body);
-  if (!request.body) return response.sendStatus(400);
-  response.json(request.body); // отправляем пришедший ответ обратно
+app.use("/contact", function (_, response) {
+  response.render("contact.hbs");
 });
 
-app.get("/", function (request, response) {
-  response.sendFile(__dirname + "/index.html");
+app.use("/", function (_, response) {
+  response.send("Главная страница");
 });
 
 app.listen(3000);
