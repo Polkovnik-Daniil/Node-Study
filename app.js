@@ -1,28 +1,17 @@
 const express = require("express");
+
 const app = express();
+// создаем парсер для данных в формате json
+const jsonParser = express.json();
 
-// определяем Router
-const productRouter = express.Router();
-
-// определяем маршруты и их обработчики внутри роутера
-productRouter.use("/create", function (request, response) {
-  response.send("Добавление товара");
-});
-productRouter.use("/:id", function (request, response) {
-  response.send(`Товар ${request.params.id}`);
-});
-productRouter.use("/", function (request, response) {
-  response.send("Список товаров");
-});
-// сопотавляем роутер с конечной точкой "/products"
-app.use("/products", productRouter);
-
-app.use("/about", function (request, response) {
-  response.send("О сайте");
+app.post("/user", jsonParser, function (request, response) {
+  console.log(request.body);
+  if (!request.body) return response.sendStatus(400);
+  response.json(request.body); // отправляем пришедший ответ обратно
 });
 
-app.use("/", function (request, response) {
-  response.send("Главная страница");
+app.get("/", function (request, response) {
+  response.sendFile(__dirname + "/index.html");
 });
 
 app.listen(3000);
