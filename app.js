@@ -2,7 +2,7 @@ const express = require("express");
 
 const app = express();
 
-app.set("view engine", "ejs");
+app.set("view engine", "pug");
 
 app.use("/contact", function (request, response) {
   response.render("contact", {
@@ -12,6 +12,15 @@ app.use("/contact", function (request, response) {
     phone: "+1234567890",
   });
 });
+app.use("/contacts", function (request, response) {
+  response.render("contacts", {
+    title: "Мои контакты",
+    emailsVisible: true,
+    emails: ["gavgav@mycorp.com", "mioaw@mycorp.com"],
+    phone: "+1234567890",
+  });
+});
+
 app.use("/", function (request, response) {
   response.send("Главная страница");
 });
