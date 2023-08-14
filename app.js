@@ -8,7 +8,7 @@ async function run() {
     await mongoClient.connect();
     const db = mongoClient.db("usersdb");
     const collection = db.collection("users");
-    const result = await collection.deleteMany({ name: "Tom" });
+    const result = await collection.findOneAndDelete({ age: 21 });
     console.log(result);
   } catch (err) {
     console.log(err);
