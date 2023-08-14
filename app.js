@@ -8,7 +8,7 @@ async function run() {
     await mongoClient.connect();
     const db = mongoClient.db("usersdb");
     const collection = db.collection("users");
-    const results = await collection.find().toArray();
+    const results = await collection.find({ name: "Tom" }).toArray();
     console.log(results);
   } catch (err) {
     console.log(err);
