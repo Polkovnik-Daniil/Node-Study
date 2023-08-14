@@ -8,10 +8,9 @@ async function run() {
     await mongoClient.connect();
     const db = mongoClient.db("usersdb");
     const collection = db.collection("users");
-    const result = await collection.findOneAndUpdate(
-      { name: "Bob" },
-      { $set: { name: "Sam" } },
-      { returnDocument: "after" }
+    const result = await collection.updateMany(
+      { name: "Sam" },
+      { $set: { name: "Bob" } }
     );
     console.log(result);
   } catch (err) {
