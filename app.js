@@ -8,8 +8,9 @@ async function run() {
     await mongoClient.connect();
     const db = mongoClient.db("usersdb");
     const collection = db.collection("users");
-    const result = await collection.findOneAndDelete({ age: 21 });
-    console.log(result);
+    //Удаляет Таблицу(Коллекцию)
+    const result = await collection.drop();
+    console.log(result); // true|false
   } catch (err) {
     console.log(err);
   } finally {
