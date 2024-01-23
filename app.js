@@ -1,106 +1,59 @@
-const express = require("express");
-const MongoClient = require("mongodb").MongoClient;
-const objectId = require("mongodb").ObjectId;
+//Buffer
+console.log("\nBuffer:");
 
-const app = express();
-const jsonParser = express.json();
+const { Buffer } = require("node:buffer");
+const a = Buffer.from("Mama mila ramy");
+a.toString("utf8");
+console.log(a);
+console.log(a.toString("utf8"));
 
-const mongoClient = new MongoClient("mongodb://127.0.0.1:27017/");
+//EventEmmiter
+console.log("\nEventEmitter:");
 
-app.use(express.static(`${__dirname}/public`));
+const EventEmitter = require("events");
+const emitter = new EventEmitter();
 
-(async () => {
-  try {
-    await mongoClient.connect();
-    app.locals.collection = mongoClient.db("usersdb").collection("users");
-    app.listen(3000);
-    console.log("Сервер ожидает подключения...");
-  } catch (err) {
-    return console.log(err);
-  }
-})();
+const eventName = "greet";
 
-app.get("/api/users", async (req, res) => {
-  const collection = req.app.locals.collection;
-  try {
-    const users = await collection.find({}).toArray();
-    res.send(users);
-  } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
-  }
-});
-app.get("/api/users/:id", async (req, res) => {
-  const collection = req.app.locals.collection;
-  try {
-    const id = new objectId(req.params.id);
-    const user = await collection.findOne({ _id: id });
-    if (user) res.send(user);
-    else res.sendStatus(404);
-  } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
-  }
+emitter.on(eventName, function (username) {
+  console.log("Emit event:", username);
 });
 
-app.post("/api/users", jsonParser, async (req, res) => {
-  if (!req.body) return res.sendStatus(400);
-
-  const userName = req.body.name;
-  const userAge = req.body.age;
-  const user = { name: userName, age: userAge };
-
-  const collection = req.app.locals.collection;
-
-  try {
-    await collection.insertOne(user);
-    res.send(user);
-  } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
+class User {
+  constructor(username, emitter) {
+    this.name = username;
+    this.emitter = emitter;
   }
-});
-
-app.delete("/api/users/:id", async (req, res) => {
-  const collection = req.app.locals.collection;
-  try {
-    const id = new objectId(req.params.id);
-    const result = await collection.findOneAndDelete({ _id: id });
-    const user = result.value;
-    if (user) res.send(user);
-    else res.sendStatus(404);
-  } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
+  sayHi() {
+    console.log("Привет. Меня зовут", this.name);
+    this.emitter.emit(eventName, this.name); // генерируем событие, передаем обработчику имя
   }
-});
+}
 
-app.put("/api/users", jsonParser, async (req, res) => {
-  if (!req.body) return res.sendStatus(400);
-  const userName = req.body.name;
-  const userAge = req.body.age;
+const tom = new User("Tom", emitter);
+tom.sayHi();
+//References
+console.log("\nREFERENCES:");
+var b = 5;
+var c = b;
+b = 6;
+console.log("\nB:\t", b);
+console.log("C:\t", c);
 
-  const collection = req.app.locals.collection;
-  try {
-    const id = new objectId(req.body.id);
-    const result = await collection.findOneAndUpdate(
-      { _id: id },
-      { $set: { age: userAge, name: userName } },
-      { returnDocument: "after" }
-    );
+var obj = {
+  valueNumber: 15,
+  valueString: "this is string",
+};
+var refObj = obj;
 
-    const user = result.value;
-    if (user) res.send(user);
-    else res.sendStatus(404);
-  } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
-  }
-});
+console.log("\nOBJ:\t", obj);
+console.log("REFOBJ:\t", refObj, "\n");
 
-// прослушиваем прерывание работы программы (ctrl-c)
-process.on("SIGINT", async () => {
-  await mongoClient.close();
-  console.log("Приложение завершило работу");
-  process.exit();
-});
+refObj.valueNumber = 20;
+refObj.valueString = "new string!";
+
+console.log("AFTER CHANGE REFOBJ:");
+console.log("OBJ:\t", obj);
+console.log("REFOBJ:\t", refObj, "\n");
+
+console.dir(obj);
