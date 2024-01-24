@@ -1,15 +1,13 @@
 const {
   Worker,
   isMainThread,
-  setEnvironmentData,
-  getEnvironmentData,
-} = require("node:worker_threads");
-
-console.log("\n", `__filename:\t${__filename}`, "\n", `__dirname:\t${__dirname}`, "\n");
+  workerData,
+} = require('node:worker_threads');
 
 if (isMainThread) {
-  setEnvironmentData("value", "World!");
-  const worker = new Worker(__filename);
+  const worker = new Worker(__filename, {
+      workerData: 'Hello, world!',
+  });
 } else {
-  console.log(getEnvironmentData("value")); // Печатает 'World!'.
+  console.log(workerData); // Печатает 'Hello, world!'.
 }
